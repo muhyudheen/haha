@@ -1,0 +1,37 @@
+name: Speed up CI with Caching
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          # The folder to cache: node_modules
+          path: ~/.npm
+          # The key for the cache, as required by the prompt
+          key: cache-7840db6
+
+      # The required step to check the cache status
+      - name: prime-cache-7840db6
+        run: echo "The cache-hit variable was: ${{ steps.cache-npm.outputs.cache-hit }}"
+
+      # This step will only run if the cache was NOT found.
+      # On the first run, it will be slow. On subsequent runs, it will be skipped.
+      - name: Install dependencies
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: npm install

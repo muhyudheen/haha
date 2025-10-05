@@ -1,11 +1,32 @@
-name: YAML Syntax Test
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Speed up CI with Caching
 
 on:
   push:
     branches: [ main, master ]
 
 jobs:
-  test-job:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "Hello, world!"
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        id: cache-npm-deps
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: cache-7840db6
+
+      - name: Prime cache info
+        run: echo "Cache hit status: ${{ steps.cache-npm-deps.outputs.cache-hit }}"
+
+      - name: Install dependencies
+        run: npm install

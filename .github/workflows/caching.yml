@@ -17,21 +17,19 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Cache node modules
-        id: cache-npm
+      - name: Cache dependencies
+        id: cache-dependencies
         uses: actions/cache@v4
         with:
-          # The folder to cache: node_modules
-          path: ~/.npm
-          # The key for the cache, as required by the prompt
+          # The folder to cache, changed to be more direct
+          path: node_modules
+          # The specific key required by the prompt
           key: cache-7840db6
 
       # The required step to check the cache status
       - name: prime-cache-7840db6
-        run: echo "The cache-hit variable was: ${{ steps.cache-npm.outputs.cache-hit }}"
-
-      # This step will only run if the cache was NOT found.
-      # On the first run, it will be slow. On subsequent runs, it will be skipped.
+        run: echo "Cache hit status: ${{ steps.cache-dependencies.outputs.cache-hit }}"
+      
+      # Install dependencies - this will be very fast if cache is restored
       - name: Install dependencies
-        if: steps.cache-npm.outputs.cache-hit != 'true'
         run: npm install

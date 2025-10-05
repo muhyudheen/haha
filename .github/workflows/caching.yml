@@ -21,13 +21,12 @@ jobs:
         id: cache-npm-deps
         uses: actions/cache@v4
         with:
-          # This path caches the shared npm cache directory
           path: ~/.npm
-          # The specific key required by the prompt
           key: cache-7840db6
 
       - name: prime-cache-7840db6
-        run: echo "Cache hit status: ${{ steps.cache-npm-deps.outputs.cache-hit }}"
+        run: 'echo "Cache hit status: ${{ steps.cache-npm-deps.outputs.cache-hit }}"'
+
       
       - name: Install dependencies
         run: npm install
